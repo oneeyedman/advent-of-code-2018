@@ -71,7 +71,7 @@ function findSimilarIDs(arr) {
       }
     }
   });
-  return(similars[0]);
+  return similars[0];
 }
 
 function getUniqueChars(a,b) {
