@@ -135,9 +135,15 @@ a.puzzle__link:hover {
 	font-size: 1.5em;
 	margin: 1em auto;
 	padding: .5em;
-	width: 40%;
+	overflow-x: auto;
+	overflow-y:hidden;
+	
 }
-
+@media all and (min-width: 768px) {
+	.part__result {
+		width: 40%;
+	}
+}
 
 
 
