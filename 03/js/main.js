@@ -4,12 +4,6 @@ const puzzleData = 'js/puzzle.json';
 const result1 = document.querySelector('#result-1');
 const result2 = document.querySelector('#result-2');
 
-const testPuzzle = [
-  "#1 @ 1,3: 4x4",
-  "#2 @ 3,1: 4x4",
-  "#3 @ 5,5: 2x2"
-];
-
 
 function makeDataReadable(arr) {
   const result = [];
@@ -74,10 +68,31 @@ function paintMe(data) {
   }
 }
 
+function findCompleteMe(data) {
+  const elfId = parseInt(data.id);
+  const x = parseInt(data.coords[0]);
+  const y = parseInt(data.coords[1]);
+  const w = parseInt(data.area[0]);
+  const h = parseInt(data.area[1]);
+  let complete = true;
+
+  for (let i = x; i<(x+w); i++) {
+    for (let j = y; j<(y+h); j++) {
+      if ( fabric[j][i].length > 1) {
+        complete = false;
+      }
+    } 
+  }
+  const result = {
+    "id": elfId,
+    "complete": complete
+  }
+  return result;
+}
+
 function getOverClaimedInches(arr) {
   const w = arr.length;
   const h = arr[0].length;
-
   let result = 0;
 
   for (let i=0;i<w;i++) {
@@ -91,11 +106,8 @@ function getOverClaimedInches(arr) {
   return result;
 }
 
-
 const fabric = createFabric(1000,1000);
 let betterPuzzle;
-
-
 
 fetch(puzzleData)
   .then(res => res.json())
@@ -106,10 +118,16 @@ fetch(puzzleData)
     for (const claim of betterPuzzle) {
       paintMe(claim);
     }
-    
+    paintFabric(fabric);
+
     result1.innerHTML = getOverClaimedInches(fabric);
 
     // Part 2
-    //result2.innerHTML = getUniqueChars(firstStr, secondStr);
+    for (const claim of betterPuzzle) {
+      const r = findCompleteMe(claim);
+      if (r.complete) {
+       result2.innerHTML = r.id;
+      }
+    }
   });
 
