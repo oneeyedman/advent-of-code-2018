@@ -118,7 +118,6 @@ fetch(puzzleData)
     for (const claim of betterPuzzle) {
       paintMe(claim);
     }
-    paintFabric(fabric);
 
     result1.innerHTML = getOverClaimedInches(fabric);
 
