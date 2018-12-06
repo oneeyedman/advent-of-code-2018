@@ -146,8 +146,7 @@ function orderIdData(arr) {
     }
   }
 
-  const results = bulkResults;
-  const guard = findWorstGuard(results);
+  const guard = findWorstGuard(bulkResults);
   
   const guardsAndSleepMinutes = arr.map(item=>{
     let mins = [];
