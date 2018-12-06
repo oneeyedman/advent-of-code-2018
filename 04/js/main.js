@@ -99,26 +99,27 @@ function findWorstGuard(arr) {
   };
 }
 
-function createTimetable() {
+function createTimetable(arr) {
+  let result = []
   for (const a of arr) {
-    const mins = a.minutes;
-    for (let i = 0; i < mins.length; i++) {
-      if (timetable[mins[i]] === undefined) {
-        timetable[mins[i]] = 1;
+    for (let i = 0; i < a.minutes.length; i++) {
+      if (result[a.minutes[i]] === undefined) {
+        result[a.minutes[i]] = 1;
       } else {
-        timetable[mins[i]] += 1;
+        result[a.minutes[i]] += 1;
       }
     }
   }
+  return result;
 }
 
-function createMinuteObject() {
+function createMinuteObject(arr) {
   let count = 0;
   let selectedMinute = 0;
-  for (let i = 0; i < timetable.length; i++) {
-    if (timetable[i] !== undefined) {
-      if (count <= timetable[i]) {
-        count = timetable[i];
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] !== undefined) {
+      if (count <= arr[i]) {
+        count = arr[i];
         selectedMinute = i;
       }
     }
@@ -131,12 +132,9 @@ function createMinuteObject() {
 }
 
 function findMostSharedMinute(arr) {
-  let timetable = [];
+  let timetable = createTimetable(arr);
 
-
-  createTimetable();  
-
-  return createMinuteObject();
+  return createMinuteObject(timetable);
   
 }
 
