@@ -99,11 +99,7 @@ function findWorstGuard(arr) {
   };
 }
 
-function findMostSharedMinute(arr) {
-  let timetable = [];
-  let count = 0;
-  let selectedMinute = 0;
-  
+function createTimetable() {
   for (const a of arr) {
     const mins = a.minutes;
     for (let i = 0; i < mins.length; i++) {
@@ -114,7 +110,11 @@ function findMostSharedMinute(arr) {
       }
     }
   }
+}
 
+function createMinuteObject() {
+  let count = 0;
+  let selectedMinute = 0;
   for (let i = 0; i < timetable.length; i++) {
     if (timetable[i] !== undefined) {
       if (count <= timetable[i]) {
@@ -124,11 +124,19 @@ function findMostSharedMinute(arr) {
     }
   }
 
-  const newResult = {
+  return {
     minute: selectedMinute,
     count: count
   };
-  return newResult;
+}
+
+function findMostSharedMinute(arr) {
+  let timetable = [];
+
+
+  createTimetable();  
+
+  return createMinuteObject();
   
 }
 
