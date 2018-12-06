@@ -125,11 +125,15 @@ function findMostSharedMinute(arr) {
   }
 
   const newResult = {
-    selectedMinute: selectedMinute,
+    minute: selectedMinute,
     count: count
   };
   return newResult;
   
+}
+
+function writeResult(id, minute) {
+  return `${id} * ${minute} = ${id * minute}`;
 }
 
 function orderIdData(arr) {
@@ -162,8 +166,8 @@ function orderIdData(arr) {
   const guardTimetable = guardsAndSleepMinutes.filter(i=>i.id === guard.id);
   const m = findMostSharedMinute(guardTimetable);
 
-  console.log(`${guard.id} * ${m.selectedMinute} = ${guard.id * m.selectedMinute}`);
-  return guard.id * m.selectedMinute;
+  console.log(writeResult(guard.id, m.minute));
+  return guard.id * m.minute;
 }
 
 function findS2guard(arr) {
@@ -178,7 +182,8 @@ function findS2guard(arr) {
       result = a;
     }
   }
-  console.log(`${result.id} * ${result.minute} = ${result.id * result.minute}`)
+  
+  console.log(writeResult(result.id, result.minute));
   return result.id * result.minute;
 }
 
@@ -197,7 +202,7 @@ function createSecondTimetable(arr) {
     const m = findMostSharedMinute(r);
     result.push({
       id: g,
-      minute: m.selectedMinute,
+      minute: m.minute,
       count: m.count
     })
   }  
