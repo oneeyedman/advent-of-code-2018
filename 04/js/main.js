@@ -124,11 +124,7 @@ function createMinuteObject(arr) {
       }
     }
   }
-
-  return {
-    minute: selectedMinute,
-    count: count
-  };
+  return {minute: selectedMinute,count: count};
 }
 
 function findMostSharedMinute(arr) {
