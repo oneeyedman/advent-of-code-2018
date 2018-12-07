@@ -7,13 +7,13 @@ let strategy2Data = [];
 
 /*
   RegExp
-  
+
   Date: /([0-9]+\-[0-9]+\-[0-9]+)/g
   time: /([0-9]+\:[0-9]+)/g
   hours: /([0-9]+[:])/g
   minutes: /([:][0-9][0-9])/g
   id: /(#[0-9]+)/g
-  
+
 */
 
 function checkIntegrity(arr) {
@@ -30,7 +30,7 @@ function checkIntegrity(arr) {
   }
 
   const items = guards + (sleeps*2);
-  
+
   if (items !== arr.length) {
     result =  false;
   }
@@ -48,13 +48,10 @@ function getMinutes(str) {
 }
 
 function markGoodGuards(arr) {
-  const results = [];
-
   for (let i=0;i<arr.length;i++) {
     if (arr[i].match('Guard')) {
       if (arr[i+1].match('Guard')) {
-          //const guardId = getGuardid(arr[i]);
-          arr[i] = '---';
+        arr[i] = '---';
       }
     }
   }
@@ -62,17 +59,18 @@ function markGoodGuards(arr) {
 
 function getSleepMinutes(arr) {
   let results = [];
-  let guards = {};
   let gId = 0;
   let sleepMinute = 0;
   let wakes = 0;
 
   for (let i=0;i<arr.length;i++) {
     if (arr[i].match('Guard')) {
-      gId = getGuardId(arr[i])
-    } else if (arr[i].match('falls')) {
+      gId = getGuardId(arr[i]);
+    }
+    if (arr[i].match('falls')) {
       sleepMinute = getMinutes(arr[i]);
-    } else if (arr[i].match('wakes')) {
+    }
+    if (arr[i].match('wakes')) {
       wakes = getMinutes(arr[i]);
       results.push({
         id: parseInt(gId),
@@ -100,14 +98,10 @@ function findWorstGuard(arr) {
 }
 
 function createTimetable(arr) {
-  let result = []
+  let result = [];
   for (const a of arr) {
     for (let i = 0; i < a.minutes.length; i++) {
-      if (result[a.minutes[i]] === undefined) {
-        result[a.minutes[i]] = 1;
-      } else {
-        result[a.minutes[i]] += 1;
-      }
+      result[a.minutes[i]] = (result[a.minutes[i]] === undefined) ? 1 : result[a.minutes[i]]+1;
     }
   }
   return result;
@@ -124,14 +118,15 @@ function createMinuteObject(arr) {
       }
     }
   }
-  return {minute: selectedMinute,count: count};
+  return {
+    minute: selectedMinute,
+    count: count
+  };
 }
 
 function findMostSharedMinute(arr) {
   let timetable = createTimetable(arr);
-
   return createMinuteObject(timetable);
-  
 }
 
 function writeResult(id, minute) {
@@ -149,7 +144,7 @@ function orderIdData(arr) {
   }
 
   const guard = findWorstGuard(bulkResults);
-  
+
   const guardsAndSleepMinutes = arr.map(item=>{
     let mins = [];
     for (let i=item.sleepMinute;i<(item.sleepMinute + item.sleepTime);i++) {
@@ -163,7 +158,7 @@ function orderIdData(arr) {
 
   // make a copy for part II
   strategy2Data = guardsAndSleepMinutes.slice(0);
-  
+
   const guardTimetable = guardsAndSleepMinutes.filter(i=>i.id === guard.id);
   const m = findMostSharedMinute(guardTimetable);
 
@@ -183,7 +178,7 @@ function findS2guard(arr) {
       result = a;
     }
   }
-  
+
   console.log(writeResult(result.id, result.minute));
   return result.id * result.minute;
 }
@@ -205,10 +200,10 @@ function createSecondTimetable(arr) {
       id: g,
       minute: m.minute,
       count: m.count
-    })
-  }  
-        
-  return result
+    });
+  }
+
+  return result;
 }
 
 fetch(puzzleData)
@@ -217,15 +212,15 @@ fetch(puzzleData)
     const orderedData = data.map(i=>i).sort();
 
     if (checkIntegrity(orderedData)) {
-     
-     // Part 1 
+
+      // Part 1
       markGoodGuards(orderedData);
       const badGuardsData = orderedData.filter(i=>i !== '---');
       const betterData = getSleepMinutes(badGuardsData);
       result1.innerHTML = orderIdData(betterData);
     }
 
-    
+
     // Part 2
     const s2timetable = createSecondTimetable(strategy2Data)
     result2.innerHTML = findS2guard(s2timetable);
