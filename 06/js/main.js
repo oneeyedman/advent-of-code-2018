@@ -84,6 +84,7 @@ const alphabet = [
 const result1 = document.querySelector('#result-1');
 const result2 = document.querySelector('#result-2');
 const grid = document.querySelector('.area__grid');
+const gridAlt = document.querySelector('.area__grid-alt');
 const testPuzzle = [
   [1, 1],
   [1, 6],
@@ -143,14 +144,19 @@ function orderMinToMax(arr) {
   });
 }
 
-function checkCoord(c,arr){
-  const distances = [];
+function getDistances(c,arr) {
+  const results = [];
   for (let i=0;i<arr.length;i++) {
-    distances[i] = {
+    results[i] = {
       letter: alphabet[i],
       value: Math.abs(arr[i][0]-c[0]) + Math.abs(arr[i][1]-c[1])
     };
   }
+  return results;
+}
+
+function checkCoord(c,arr){
+  const distances = getDistances(c,arr);
   orderMinToMax(distances);
   return (distances[0].value === distances[1].value) ? '.':distances[0].letter;
 }
@@ -210,19 +216,48 @@ function findInfiniteAreas(arr) {
   return findLargerFiniteArea(infiniteAreas,arr);
 }
 
+function getCoordDistances(c,arr){
+  const distances = getDistances(c,arr);
+  orderMinToMax(distances);
+  return distances;
+}
+
+function getTotalDistanceValue(arr) {
+  return arr.reduce((acc,i)=>acc += i.value, 0);
+}
+
+function markMinArea(arr, coords) {
+  let minArea = 0;
+  for (let i=0;i<arr.length;i++) {
+    for (let j=0;j<arr.length;j++) {
+      const d = getTotalDistanceValue( getCoordDistances([i,j],coords) );
+      if (d<32) {
+        arr[i][j] = '#';
+        minArea++;
+      } else {
+        arr[i][j] = '-';
+      }
+    }
+  }
+  console.log(minArea);
+}
 
 fetch(puzzleData)
   .then(res => res.json())
   .then(data => {
 
     // Part 1
-    const canvas = createCanvas(data);
-    showAreas(canvas, data);
+    const canvas = createCanvas(testPuzzle);
+    showAreas(canvas, testPuzzle);
+    const canvasS2 = canvas.slice(0)
     findInfiniteAreas(canvas);
     //paintCanvas(grid,canvas);
     result1.innerHTML = findInfiniteAreas(canvas).size;
 
     // Part 2
+    paintCanvas(grid,canvasS2);
+    markMinArea(canvasS2,testPuzzle);
+    paintCanvas(gridAlt,canvasS2)
     result2.innerHTML = '---';
   });
 
