@@ -1,17 +1,11 @@
 'use strict';
 
 const puzzleData = 'js/puzzle.json';
-const testPuzzle = 'dabAcCaCBAcCcaDA';
-const alphabet = "abcdefghijklmnopqrstuvwxyz";
+const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 const reactionCases = new RegExp(createCasesList(alphabet).join('|'),'g');
 const unitCases = createUnitsList(alphabet);
 const result1 = document.querySelector('#result-1');
 const result2 = document.querySelector('#result-2');
-
-
-function duplicateMe(str) {
-  return str+str;
-}
 
 function createCasesList(str) {
   const result = [];
@@ -59,9 +53,9 @@ fetch(puzzleData)
   .then(res => res.json())
   .then(data => {
 
-    // Part 1 
+    // Part 1
     result1.innerHTML = activateReaction(data.polymer);
-    
+
     // Part 2
     result2.innerHTML = getUnitActivationResult(data.polymer);
   });
