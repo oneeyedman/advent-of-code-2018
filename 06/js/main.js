@@ -226,12 +226,12 @@ function getTotalDistanceValue(arr) {
   return arr.reduce((acc,i)=>acc += i.value, 0);
 }
 
-function markMinArea(arr, coords) {
+function markMinArea(arr, coords, limit) {
   let minArea = 0;
   for (let i=0;i<arr.length;i++) {
     for (let j=0;j<arr.length;j++) {
       const d = getTotalDistanceValue( getCoordDistances([i,j],coords) );
-      if (d<32) {
+      if (d<limit) {
         arr[i][j] = '#';
         minArea++;
       } else {
@@ -239,7 +239,7 @@ function markMinArea(arr, coords) {
       }
     }
   }
-  console.log(minArea);
+  return minArea;
 }
 
 fetch(puzzleData)
@@ -247,17 +247,14 @@ fetch(puzzleData)
   .then(data => {
 
     // Part 1
-    const canvas = createCanvas(testPuzzle);
-    showAreas(canvas, testPuzzle);
+    const canvas = createCanvas(data);
+    showAreas(canvas, data);
     const canvasS2 = canvas.slice(0)
     findInfiniteAreas(canvas);
     //paintCanvas(grid,canvas);
     result1.innerHTML = findInfiniteAreas(canvas).size;
 
     // Part 2
-    paintCanvas(grid,canvasS2);
-    markMinArea(canvasS2,testPuzzle);
-    paintCanvas(gridAlt,canvasS2)
-    result2.innerHTML = '---';
+    result2.innerHTML = markMinArea(canvasS2,data,10000);
   });
 
